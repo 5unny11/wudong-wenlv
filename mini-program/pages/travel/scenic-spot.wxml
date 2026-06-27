@@ -1,15 +1,15 @@
-﻿<view class="container">
+<view class="container">
   <view class="back" bindtap="goBack">← 返回</view>
-  
+
   <view class="banner">{{spot.name}}</view>
 
   <view class="info-card">
-    <view class="info-row"><text class="label">地址</text><text>{{spot.address || "乌东苗寨"}}</text></view>
-    <view class="info-row"><text class="label">开放时间</text><text>{{spot.open_time || "全天"}}</text></view>
+    <view class="info-row"><text class="label">地址</text><text>{{spot.address || '乌东苗寨'}}</text></view>
+    <view class="info-row"><text class="label">开放时间</text><text>{{spot.open_time || '全天'}}</text></view>
   </view>
 
   <view class="section"><text class="section-title">景区介绍</text></view>
-  <text class="intro-text">{{spot.intro || "暂无介绍"}}</text>
+  <text class="intro-text">{{spot.intro || '暂无介绍'}}</text>
 
   <view class="section"><text class="section-title">票种选择</text></view>
   <view class="list">

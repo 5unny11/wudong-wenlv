@@ -13,14 +13,15 @@ export default function LoginPage() {
     try {
       const res = await api.post('/auth/login', values);
       if (res.data.code === 0) {
-        localStorage.setItem('token', res.data.data.token);
-        localStorage.setItem('user', JSON.stringify(res.data.data.user));
         const user = res.data.data.user;
+        // 先校验管理员权限，再写入本地存储
         if (user.is_merchant !== 1) {
           message.error('无管理员权限，请联系平台管理员');
           setLoading(false);
           return;
         }
+        sessionStorage.setItem('token', res.data.data.token);
+        sessionStorage.setItem('user', JSON.stringify(user));
         message.success('登录成功');
         navigate('/travel');
       } else {

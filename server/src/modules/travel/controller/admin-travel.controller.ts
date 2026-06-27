@@ -11,6 +11,18 @@ export class AdminTravelController {
   @Inject()
   ctx: Context;
 
+  // ==================== 数据看板 ====================
+
+  @Get('/stats')
+  async getStats() {
+    try {
+      const data = await this.travelService.adminStats();
+      return { code: 0, message: 'success', data };
+    } catch (err: any) {
+      return { code: 1, message: err.message };
+    }
+  }
+
   // ==================== 景区管理 ====================
 
   @Get('/scenic-spots')
@@ -159,6 +171,21 @@ export class AdminTravelController {
     }
   }
 
+  // ==================== 电子票核销 ====================
+
+  @Post('/e-tickets/verify')
+  async verifyETicket(@Body() body: { qrCode: string }) {
+    try {
+      const admin = this.ctx.state.user;
+      if (!admin || admin.role !== 'admin') return { code: 403, message: '无权限' };
+      // 从 token 中的 userId 查找对应 merchant_id
+      const data = await this.travelService.verifyETicket(body.qrCode, admin.userId);
+      return { code: 0, message: '核销成功', data };
+    } catch (err: any) {
+      return { code: 1, message: err.message };
+    }
+  }
+
   // ==================== 订单管理 ====================
 
   @Get('/orders')
@@ -186,6 +213,78 @@ export class AdminTravelController {
     try {
       const data = await this.travelService.adminGetOrderDetail(id);
       return { code: 0, message: 'success', data };
+    } catch (err: any) {
+      return { code: 1, message: err.message };
+    }
+  }
+
+  // ==================== 交通攻略管理 ====================
+
+  @Get('/transport-guides')
+  async listTransportGuides() {
+    try {
+      const data = await this.travelService.adminListTransportGuides();
+      return { code: 0, message: 'success', data };
+    } catch (err: any) {
+      return { code: 1, message: err.message };
+    }
+  }
+
+  @Post('/transport-guides')
+  async createTransportGuide(@Body() body: any) {
+    try {
+      const data = await this.travelService.adminCreateTransportGuide(body);
+      return { code: 0, message: '创建成功', data };
+    } catch (err: any) {
+      return { code: 1, message: err.message };
+    }
+  }
+
+  @Put('/transport-guides/:id')
+  async updateTransportGuide(@Param('id') id: number, @Body() body: any) {
+    try {
+      const data = await this.travelService.adminUpdateTransportGuide(id, body);
+      return { code: 0, message: '更新成功', data };
+    } catch (err: any) {
+      return { code: 1, message: err.message };
+    }
+  }
+
+  @Del('/transport-guides/:id')
+  async deleteTransportGuide(@Param('id') id: number) {
+    try {
+      await this.travelService.adminDeleteTransportGuide(id);
+      return { code: 0, message: '已下架' };
+    } catch (err: any) {
+      return { code: 1, message: err.message };
+    }
+  }
+
+  // ==================== 评价管理 ====================
+
+  @Get('/reviews')
+  async listReviews(
+    @Query('targetType') targetType?: string,
+    @Query('page') page?: string,
+    @Query('pageSize') pageSize?: string,
+  ) {
+    try {
+      const data = await this.travelService.adminListReviews(
+        targetType,
+        page ? Number(page) : undefined,
+        pageSize ? Number(pageSize) : undefined,
+      );
+      return { code: 0, message: 'success', data };
+    } catch (err: any) {
+      return { code: 1, message: err.message };
+    }
+  }
+
+  @Del('/reviews/:id')
+  async deleteReview(@Param('id') id: number) {
+    try {
+      await this.travelService.adminDeleteReview(id);
+      return { code: 0, message: '已删除' };
     } catch (err: any) {
       return { code: 1, message: err.message };
     }

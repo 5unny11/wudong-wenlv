@@ -56,4 +56,11 @@
    async getUserById(id: number) {
      return await this.userModel.findOne({ where: { id } });
    }
+
+   async updateProfile(userId: number, data: { nickname?: string }) {
+     const user = await this.userModel.findOne({ where: { id: userId } });
+     if (!user) throw new Error('用户不存在');
+     if (data.nickname) user.nickname = data.nickname;
+     return await this.userModel.save(user);
+   }
  }

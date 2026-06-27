@@ -3,6 +3,7 @@ Page({
     activeTab: 'scenic',
     scenicSpots: [],
     routes: [],
+    transportGuides: [],
     eTickets: [],
     loading: true,
     token: '',
@@ -16,7 +17,7 @@ Page({
 
   loadData() {
     this.setData({ loading: true });
-    const baseUrl = 'http://localhost:7001/api';
+    const baseUrl = 'http://127.0.0.1:7001/api';
 
     Promise.all([
       new Promise(resolve => {
@@ -25,8 +26,11 @@ Page({
       new Promise(resolve => {
         wx.request({ url: baseUrl + '/routes', success: r => resolve(r.data.data || []), fail: () => resolve([]) });
       }),
-    ]).then(([spots, routes]) => {
-      this.setData({ scenicSpots: spots, routes, loading: false });
+      new Promise(resolve => {
+        wx.request({ url: baseUrl + '/transport-guides', success: r => resolve(r.data.data || []), fail: () => resolve([]) });
+      }),
+    ]).then(([spots, routes, guides]) => {
+      this.setData({ scenicSpots: spots, routes, transportGuides: guides, loading: false });
     });
 
     // 加载电子票
@@ -51,6 +55,10 @@ Page({
     wx.navigateTo({ url: '/pages/travel/route?id=' + e.currentTarget.dataset.id });
   },
 
+  goToTransportGuide(e) {
+    wx.navigateTo({ url: '/pages/travel/transport-guide?id=' + e.currentTarget.dataset.id });
+  },
+
   goToETicket(e) {
     if (!this.data.token) {
       wx.navigateTo({ url: '/pages/user/login' });
@@ -69,5 +77,19 @@ Page({
 
   goToLogin() {
     wx.navigateTo({ url: '/pages/user/login' });
+  },
+
+  handleLogout() {
+    wx.showModal({
+      title: '退出登录',
+      content: '确定要退出当前账号吗？',
+      success: res => {
+        if (res.confirm) {
+          wx.removeStorageSync('token');
+          this.setData({ token: '', eTickets: [] });
+          wx.showToast({ title: '已退出', icon: 'none' });
+        }
+      },
+    });
   },
 });

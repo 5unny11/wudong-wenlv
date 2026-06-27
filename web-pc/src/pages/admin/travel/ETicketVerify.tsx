@@ -17,7 +17,7 @@ export default function ETicketVerify() {
     }
     setLoading(true);
     try {
-      const res = await api.post('/e-tickets/verify', { qrCode: qrCode.trim() });
+      const res = await api.post('/admin/travel/e-tickets/verify', { qrCode: qrCode.trim() });
       if (res.data.code === 0) {
         setResult({ success: true, ticket: res.data.data });
       } else {
@@ -44,7 +44,7 @@ export default function ETicketVerify() {
             <div style={{ textAlign: 'center', marginBottom: 24 }}>
               <ScanOutlined style={{ fontSize: 48, color: '#1677ff' }} />
               <Text style={{ display: 'block', marginTop: 8, color: '#666' }}>
-                输入电子票号进行核销
+                输入电子票号（TKT 开头）
               </Text>
             </div>
 

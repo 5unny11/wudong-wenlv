@@ -7,7 +7,7 @@
  
  // 自动附加 Token
  api.interceptors.request.use((config) => {
-   const token = localStorage.getItem('token');
+   const token = sessionStorage.getItem('token');
    if (token) config.headers.Authorization = `Bearer ${token}`;
    return config;
  });
@@ -17,7 +17,8 @@
    (res) => res,
    (err) => {
      if (err.response?.status === 401) {
-       localStorage.removeItem('token');
+       sessionStorage.removeItem('token');
+       sessionStorage.removeItem('user');
        window.location.href = '/login';
      }
      return Promise.reject(err);
@@ -64,13 +65,15 @@ export const travelAPI = {
     api.get(`/travel/orders/${id}`).then(r => r.data),
   cancelTravelOrder: (id: number) =>
     api.post(`/travel/orders/${id}/cancel`).then(r => r.data),
+  payTravelOrder: (id: number) =>
+    api.post(`/travel/orders/${id}/pay`).then(r => r.data),
 
   listMyETickets: (status?: number) =>
     api.get('/e-tickets', { params: { status } }).then(r => r.data),
   getETicket: (id: number) =>
     api.get(`/e-tickets/${id}`).then(r => r.data),
   verifyETicket: (qrCode: string) =>
-    api.post('/e-tickets/verify', { qrCode }).then(r => r.data),
+    api.post('/admin/travel/e-tickets/verify', { qrCode }).then(r => r.data),
 
   createReview: (data: any) =>
     api.post('/travel/reviews', data).then(r => r.data),

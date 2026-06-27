@@ -3,7 +3,6 @@
   <text class="title">我的旅游订单</text>
 
   <view wx:if="{{loading}}" class="loading">加载中...</view>
-
   <view wx:if="{{!loading && orders.length === 0}}" class="empty">暂无订单</view>
 
   <view class="list" wx:if="{{!loading}}">
@@ -12,13 +11,13 @@
         <view class="order-row">
           <text class="order-no">{{item.order_no}}</text>
           <text class="order-type {{item.order_type === 'ticket' ? 'tag-blue' : 'tag-green'}}">
-            {{item.order_type === "ticket" ? "门票" : "路线"}}
+            {{item.order_type === 'ticket' ? '门票' : '路线'}}
           </text>
         </view>
         <view class="order-row">
           <text class="order-amount">¥{{item.pay_amount || item.total_amount}}</text>
           <text class="order-status status-{{item.status}}">
-            {{item.status === 0 ? "待支付" : item.status === 1 ? "已支付" : item.status === 3 ? "已完成" : item.status === 4 ? "已取消" : "未知"}}
+            {{item.status === 0 ? '待支付' : item.status === 1 ? '已支付' : item.status === 3 ? '已完成' : item.status === 4 ? '已取消' : '未知'}}
           </text>
         </view>
         <view class="order-row order-time">

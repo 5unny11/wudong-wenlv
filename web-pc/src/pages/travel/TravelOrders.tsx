@@ -21,7 +21,7 @@ export default function TravelOrdersPage() {
   const [orders, setOrders] = useState<any[]>([]);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     if (!token) { navigate('/login'); return; }
     loadOrders();
   }, []);
@@ -52,6 +52,20 @@ export default function TravelOrdersPage() {
     }
   };
 
+  const handlePay = async (orderId: number) => {
+    try {
+      const res = await travelAPI.payTravelOrder(orderId);
+      if (res.code === 0) {
+        message.success('支付成功（模拟）');
+        loadOrders();
+      } else {
+        message.error(res.message);
+      }
+    } catch (err) {
+      message.error('支付失败');
+    }
+  };
+
   const columns = [
     { title: '订单号', dataIndex: 'order_no', key: 'order_no', ellipsis: true },
     {
@@ -76,9 +90,13 @@ export default function TravelOrdersPage() {
         <Space>
           <Button type="link" size="small" onClick={() => navigate(`/travel/orders/${record.id}`)}>详情</Button>
           {record.status === 0 && (
-            <Popconfirm title="确定取消此订单？" onConfirm={() => handleCancel(record.id)}>
-              <Button type="link" size="small" danger>取消</Button>
-            </Popconfirm>
+            <>
+              <Button type="link" size="small" style={{ color: '#52c41a' }}
+                onClick={() => handlePay(record.id)}>支付</Button>
+              <Popconfirm title="确定取消此订单？" onConfirm={() => handleCancel(record.id)}>
+                <Button type="link" size="small" danger>取消</Button>
+              </Popconfirm>
+            </>
           )}
         </Space>
       ),

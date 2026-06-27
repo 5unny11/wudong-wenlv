@@ -4,6 +4,7 @@
     "pages/travel/scenic-spot",
     "pages/travel/route",
     "pages/travel/e-ticket",
+    "pages/travel/transport-guide",
     "pages/travel/orders",
     "pages/user/login",
     "pages/user/register"

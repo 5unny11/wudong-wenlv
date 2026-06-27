@@ -13,6 +13,8 @@
    @Column({ type: 'decimal', precision: 10, scale: 2 }) pay_amount: number;
    @Column({ length: 64, nullable: true }) logistics_company: string;
    @Column({ length: 64, nullable: true }) logistics_no: string;
+   @Column({ type: 'date', nullable: true }) travel_date: string;
+   @Column({ type: 'simple-json', nullable: true }) visitor_info: { names: string[]; ids: string[] };
    @Column({ type: 'text', nullable: true }) remark: string;
    @Column({ type: 'datetime', nullable: true }) paid_at: Date;
    @Column({ type: 'datetime', nullable: true }) shipped_at: Date;

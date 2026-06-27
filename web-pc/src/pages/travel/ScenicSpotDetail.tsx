@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Row, Col, Card, Typography, Tag, Button, Spin, Descriptions, InputNumber, Space, Divider, message, Modal, Form, Input, List, Rate } from 'antd';
 import { EnvironmentOutlined, ClockCircleOutlined, ShoppingCartOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import { travelAPI } from '@/api';
+import { scenicSpotCovers, defaultCover } from './covers';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -44,7 +45,7 @@ export default function ScenicSpotDetailPage() {
     }
   };
 
-  const token = localStorage.getItem('token');
+  const token = sessionStorage.getItem('token');
 
   const handleQuantityChange = (ticketId: number, value: number | null) => {
     setQuantities(prev => ({ ...prev, [ticketId]: value || 0 }));
@@ -101,6 +102,8 @@ export default function ScenicSpotDetailPage() {
   if (loading) return <div style={{ textAlign: 'center', padding: 80 }}><Spin size="large" tip="加载中..." /></div>;
   if (!spot) return <div style={{ textAlign: 'center', padding: 80 }}><Text>景区不存在</Text></div>;
 
+  const cov = scenicSpotCovers[spot.id] || defaultCover;
+
   return (
     <div style={{ maxWidth: 1200, margin: '0 auto', padding: 24 }}>
       <Button type="link" icon={<ArrowLeftOutlined />} onClick={() => navigate('/travel')} style={{ marginBottom: 16, padding: 0 }}>
@@ -110,11 +113,11 @@ export default function ScenicSpotDetailPage() {
       <Row gutter={32}>
         <Col xs={24} md={10}>
           <div style={{
-            height: 350, borderRadius: 8,
-            background: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 80,
+            height: 350, borderRadius: 12,
+            background: cov.gradient,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}>
-            🏔️
+            <span style={{ fontSize: 100, opacity: 0.4 }}>{cov.icon}</span>
           </div>
         </Col>
         <Col xs={24} md={14}>
@@ -217,12 +220,12 @@ export default function ScenicSpotDetailPage() {
             <Input type="date" />
           </Form.Item>
 
-          <Form.Item label="游客姓名（每行一个）" name="visitorNames">
+          <Form.Item label="游客姓名（每行一个）" name="visitorNames" rules={[{ required: true, message: '请填写游客姓名' }]}>
             <Input.TextArea rows={3} placeholder="张三&#10;李四" />
           </Form.Item>
 
-          <Form.Item label="游客身份证号（每行一个）" name="visitorIds">
-            <Input.TextArea rows={3} placeholder="可选填写" />
+          <Form.Item label="游客身份证号（每行一个）" name="visitorIds" rules={[{ required: true, message: '请填写身份证号' }]}>
+            <Input.TextArea rows={3} placeholder="每行一个身份证号" />
           </Form.Item>
 
           <Form.Item label="备注" name="remark">

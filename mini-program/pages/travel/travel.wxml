@@ -1,26 +1,30 @@
-﻿<view class="container">
+<view class="container">
   <view class="header">
-    <text class="title">出行·游玩</text>
+    <view class="header-row">
+      <text class="title">出行·游玩</text>
+      <text class="logout-btn" wx:if="{{token}}" bindtap="handleLogout">退出</text>
+    </view>
     <text class="subtitle">探索乌东苗寨，从门票到路线一站式预订</text>
   </view>
 
   <view class="tabs">
-    <view class="tab {{activeTab === "scenic" ? "active" : ""}}" data-tab="scenic" bindtap="switchTab">景区门票</view>
-    <view class="tab {{activeTab === "route" ? "active" : ""}}" data-tab="route" bindtap="switchTab">游玩路线</view>
-    <view class="tab {{activeTab === "eticket" ? "active" : ""}}" data-tab="eticket" bindtap="switchTab">我的电子票</view>
+    <view class="tab {{activeTab === 'scenic' ? 'active' : ''}}" data-tab="scenic" bindtap="switchTab">景区门票</view>
+    <view class="tab {{activeTab === 'route' ? 'active' : ''}}" data-tab="route" bindtap="switchTab">游玩路线</view>
+    <view class="tab {{activeTab === 'transport' ? 'active' : ''}}" data-tab="transport" bindtap="switchTab">交通攻略</view>
+    <view class="tab {{activeTab === 'eticket' ? 'active' : ''}}" data-tab="eticket" bindtap="switchTab">我的电子票</view>
   </view>
 
   <view wx:if="{{loading}}"><view class="loading">加载中...</view></view>
 
-  <view wx:if="{{activeTab === "scenic" && !loading}}">
+  <view wx:if="{{activeTab === 'scenic' && !loading}}">
     <view class="list">
       <view class="card" wx:for="{{scenicSpots}}" wx:key="id" data-id="{{item.id}}" bindtap="goToScenicSpot">
         <view class="card-image spot-bg"></view>
         <view class="card-body">
           <text class="card-title">{{item.name}}</text>
-          <text class="card-desc">{{item.intro || item.address || "乌东苗寨景区"}}</text>
+          <text class="card-desc">{{item.intro || item.address || '乌东苗寨景区'}}</text>
           <view class="card-footer">
-            <text class="card-tag">{{item.open_time || "全天开放"}}</text>
+            <text class="card-tag">{{item.open_time || '全天开放'}}</text>
           </view>
         </view>
       </view>
@@ -28,7 +32,7 @@
     <view wx:if="{{scenicSpots.length === 0}}" class="empty">暂无景区数据</view>
   </view>
 
-  <view wx:if="{{activeTab === "route" && !loading}}">
+  <view wx:if="{{activeTab === 'route' && !loading}}">
     <view class="list">
       <view class="card" wx:for="{{routes}}" wx:key="id" data-id="{{item.id}}" bindtap="goToRoute">
         <view class="card-image route-bg"></view>
@@ -36,7 +40,7 @@
           <text class="card-title">{{item.title}}</text>
           <text class="card-desc">{{item.includes}}</text>
           <view class="card-footer">
-            <text class="card-tag">{{item.duration === "one_day" ? "一日游" : "两日游"}}</text>
+            <text class="card-tag">{{item.duration === 'one_day' ? '一日游' : '两日游'}}</text>
             <text class="card-price">¥{{item.price}}/人</text>
           </view>
         </view>
@@ -45,15 +49,32 @@
     <view wx:if="{{routes.length === 0}}" class="empty">暂无路线数据</view>
   </view>
 
-  <view wx:if="{{activeTab === "eticket" && !loading}}">
+  <view wx:if="{{activeTab === 'transport' && !loading}}">
+    <view class="list">
+      <view class="card" wx:for="{{transportGuides}}" wx:key="id" data-id="{{item.id}}" bindtap="goToTransportGuide">
+        <view class="card-body">
+          <text class="card-title">{{item.title}}</text>
+          <text class="card-desc">{{item.departure}} → {{item.destination}}  |  {{item.transport_mode}}</text>
+          <view class="card-footer">
+            <text class="card-tag">{{item.transport_mode}}</text>
+            <text class="card-price" wx:if="{{item.cost}}">¥{{item.cost}}</text>
+            <text class="card-desc" wx:if="{{item.duration}}">{{item.duration}}h</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view wx:if="{{transportGuides.length === 0}}" class="empty">暂无交通攻略</view>
+  </view>
+
+  <view wx:if="{{activeTab === 'eticket' && !loading}}">
     <view class="list">
       <view class="card ticket-card" wx:for="{{eTickets}}" wx:key="id" data-id="{{item.id}}" bindtap="goToETicket">
         <view class="card-body">
           <text class="card-title">电子票 #{{item.id}}</text>
           <text class="card-desc">有效期: {{item.valid_from}} ~ {{item.valid_to}}</text>
           <view class="card-footer">
-            <text class="card-tag {{item.status === 0 ? "tag-blue" : item.status === 1 ? "tag-green" : ""}}">
-              {{item.status === 0 ? "未使用" : item.status === 1 ? "已使用" : "已退款"}}
+            <text class="card-tag {{item.status === 0 ? 'tag-blue' : item.status === 1 ? 'tag-green' : ''}}">
+              {{item.status === 0 ? '未使用' : item.status === 1 ? '已使用' : '已退款'}}
             </text>
           </view>
         </view>

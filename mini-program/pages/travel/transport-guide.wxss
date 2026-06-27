@@ -1,0 +1,15 @@
+.container { padding: 16px; background: #f7f8fa; min-height: 100vh; }
+.header { margin-bottom: 16px; }
+.back-btn { font-size: 14px; color: #1F5FA8; margin-bottom: 8px; }
+.title { font-size: 20px; font-weight: 700; color: #1a1a1a; display: block; }
+.card { background: #fff; border-radius: 12px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+.route-line { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 16px; }
+.departure, .destination { font-size: 18px; font-weight: 600; color: #1F5FA8; }
+.arrow { font-size: 20px; color: #8C8C8C; }
+.info-row { display: flex; justify-content: space-around; }
+.info-item { display: flex; flex-direction: column; align-items: center; }
+.label { font-size: 12px; color: #8C8C8C; margin-bottom: 4px; }
+.value { font-size: 16px; font-weight: 500; color: #1a1a1a; }
+.value.price { color: #ff4d4f; }
+.section-title { font-size: 16px; font-weight: 600; color: #1a1a1a; margin-bottom: 8px; display: block; }
+.detail-text { font-size: 14px; color: #595959; line-height: 1.7; white-space: pre-wrap; }

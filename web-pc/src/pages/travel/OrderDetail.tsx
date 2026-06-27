@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Card, Typography, Button, Spin, Tag, Descriptions, Table, Divider, message } from 'antd';
-import { ArrowLeftOutlined, QrcodeOutlined } from '@ant-design/icons';
+import { Card, Typography, Button, Spin, Tag, Descriptions, Table, Divider, message, Space, Modal, Rate, Input } from 'antd';
+import { ArrowLeftOutlined, QrcodeOutlined, DollarOutlined, StarOutlined } from '@ant-design/icons';
 import { travelAPI } from '@/api';
 
 const { Title, Text } = Typography;
@@ -9,8 +9,10 @@ const { Title, Text } = Typography;
 const statusMap: Record<number, { label: string; color: string }> = {
   0: { label: '待支付', color: 'orange' },
   1: { label: '已支付', color: 'blue' },
+  2: { label: '已发货', color: 'processing' },
   3: { label: '已完成', color: 'green' },
   4: { label: '已取消', color: 'default' },
+  5: { label: '退款中', color: 'red' },
   6: { label: '已退款', color: 'default' },
 };
 
@@ -35,6 +37,43 @@ export default function TravelOrderDetailPage() {
       message.error('加载订单失败');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const [reviewOpen, setReviewOpen] = useState(false);
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewContent, setReviewContent] = useState('');
+  const [reviewSubmitting, setReviewSubmitting] = useState(false);
+
+  const handleReview = async () => {
+    if (!order?.reviewTarget) { message.error('暂无评价目标信息'); return; }
+    setReviewSubmitting(true);
+    try {
+      const res = await travelAPI.createReview({
+        orderId: order.id,
+        targetType: order.reviewTarget.targetType,
+        targetId: order.reviewTarget.targetId,
+        rating: reviewRating,
+        content: reviewContent || undefined,
+      });
+      if (res.code === 0) { message.success('评价成功'); setReviewOpen(false); loadOrder(); }
+      else message.error(res.message);
+    } catch (err) { message.error('评价失败'); }
+    finally { setReviewSubmitting(false); }
+  };
+
+  const handlePay = async () => {
+    if (!id) return;
+    try {
+      const res = await travelAPI.payTravelOrder(Number(id));
+      if (res.code === 0) {
+        message.success('支付成功（模拟）');
+        loadOrder();
+      } else {
+        message.error(res.message);
+      }
+    } catch (err) {
+      message.error('支付失败');
     }
   };
 
@@ -71,6 +110,24 @@ export default function TravelOrderDetailPage() {
         返回订单列表
       </Button>
 
+      {order.status === 0 && (
+        <Card size="small" style={{ marginBottom: 16, background: '#fff7e6', borderColor: '#ffa940' }}>
+          <Space>
+            <Text>此订单待支付</Text>
+            <Button type="primary" size="small" icon={<DollarOutlined />} onClick={handlePay}>立即支付（模拟）</Button>
+          </Space>
+        </Card>
+      )}
+
+      {order.status === 1 && order.reviewTarget && (
+        <Card size="small" style={{ marginBottom: 16, background: '#f6ffed', borderColor: '#b7eb8f' }}>
+          <Space>
+            <Text>已完成支付，可以对本次行程进行评价</Text>
+            <Button type="primary" size="small" icon={<StarOutlined />} onClick={() => { setReviewRating(5); setReviewContent(''); setReviewOpen(true); }}>评价</Button>
+          </Space>
+        </Card>
+      )}
+
       <Card>
         <Descriptions column={2} bordered size="small">
           <Descriptions.Item label="订单号">{order.order_no}</Descriptions.Item>
@@ -87,6 +144,12 @@ export default function TravelOrderDetailPage() {
           <Descriptions.Item label="下单时间" span={2}>
             {new Date(order.created_at).toLocaleString('zh-CN')}
           </Descriptions.Item>
+          {order.travel_date && <Descriptions.Item label="出行日期" span={2}>{order.travel_date}</Descriptions.Item>}
+          {order.visitor_info?.names?.length > 0 && (
+            <Descriptions.Item label="游客姓名" span={2}>
+              <Space wrap>{order.visitor_info.names.map((n: string, i: number) => <Tag key={i}>{n}</Tag>)}</Space>
+            </Descriptions.Item>
+          )}
           {order.remark && <Descriptions.Item label="备注" span={2}>{order.remark}</Descriptions.Item>}
         </Descriptions>
 
@@ -98,6 +161,16 @@ export default function TravelOrderDetailPage() {
           </>
         )}
       </Card>
+
+      <Modal title="评价" open={reviewOpen} onCancel={() => setReviewOpen(false)} onOk={handleReview}
+        confirmLoading={reviewSubmitting} okText="提交评价" width={440}>
+        <div style={{ textAlign: 'center', marginBottom: 16 }}>
+          <Text style={{ display: 'block', marginBottom: 8 }}>评分</Text>
+          <Rate value={reviewRating} onChange={setReviewRating} />
+        </div>
+        <Input.TextArea rows={3} placeholder="写下您的感受（选填）" value={reviewContent}
+          onChange={e => setReviewContent(e.target.value)} />
+      </Modal>
     </div>
   );
 }

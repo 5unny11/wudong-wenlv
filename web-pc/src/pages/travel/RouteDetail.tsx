@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Card, Typography, Button, Spin, Descriptions, Tag, Steps, Divider, Space, message, Modal, Form, Input, InputNumber } from 'antd';
+import { Card, Typography, Button, Spin, Tag, Steps, Divider, Space, message, Modal, Form, Input, InputNumber, List, Rate } from 'antd';
 import { CalendarOutlined, ArrowLeftOutlined, CheckCircleOutlined, ScheduleOutlined } from '@ant-design/icons';
 import { travelAPI } from '@/api';
+import { routeCovers, defaultCover } from './covers';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -11,6 +12,7 @@ export default function RouteDetailPage() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [route, setRoute] = useState<any>(null);
+  const [reviews, setReviews] = useState<any[]>([]);
   const [orderModal, setOrderModal] = useState(false);
   const [purchasing, setPurchasing] = useState(false);
   const [form] = Form.useForm();
@@ -26,15 +28,16 @@ export default function RouteDetailPage() {
       const res = await travelAPI.getRoute(Number(id));
       if (res.code === 0) setRoute(res.data);
       else message.error(res.message);
-    } catch (err) {
-      message.error('加载路线信息失败');
+      // 加载评价
+      const reviewRes = await travelAPI.listReviews('tour_route', Number(id));
+      if (reviewRes.code === 0) setReviews(reviewRes.data);
     } finally {
       setLoading(false);
     }
   };
 
   const handleBuy = () => {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     if (!token) { message.warning('请先登录'); navigate('/login'); return; }
     setOrderModal(true);
   };
@@ -73,6 +76,8 @@ export default function RouteDetailPage() {
   if (loading) return <div style={{ textAlign: 'center', padding: 80 }}><Spin size="large" tip="加载中..." /></div>;
   if (!route) return <div style={{ textAlign: 'center', padding: 80 }}><Text>路线不存在</Text></div>;
 
+  const cov = routeCovers[route.id] || defaultCover;
+
   return (
     <div style={{ maxWidth: 1200, margin: '0 auto', padding: 24 }}>
       <Button type="link" icon={<ArrowLeftOutlined />} onClick={() => navigate('/travel')} style={{ marginBottom: 16, padding: 0 }}>
@@ -81,11 +86,11 @@ export default function RouteDetailPage() {
 
       {/* 封面 */}
       <div style={{
-        height: 300, borderRadius: 8, marginBottom: 24,
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 80, color: '#fff',
+        height: 300, borderRadius: 12, marginBottom: 24,
+        background: cov.gradient,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
-        🗺️
+        <span style={{ fontSize: 100, opacity: 0.35 }}>{cov.icon}</span>
       </div>
 
       <Title level={3}>{route.title}</Title>
@@ -141,6 +146,19 @@ export default function RouteDetailPage() {
       <Title level={5}>包含项目</Title>
       <Paragraph>{route.includes || '详见行程'}</Paragraph>
 
+      <Divider />
+      <Title level={5}>用户评价</Title>
+      {reviews.length === 0 ? (
+        <Text type="secondary">暂无评价</Text>
+      ) : (
+        <List dataSource={reviews} renderItem={(review: any) => (
+          <List.Item>
+            <List.Item.Meta avatar={<Rate disabled value={review.rating} />}
+              description={<Text>{review.content || '（无文字）'}</Text>} />
+          </List.Item>
+        )} />
+      )}
+
       {/* 下单弹窗 */}
       <Modal title="预订路线" open={orderModal} onCancel={() => setOrderModal(false)} footer={null} width={480}>
         <Form form={form} layout="vertical" onFinish={handlePlaceOrder}>
@@ -157,11 +175,11 @@ export default function RouteDetailPage() {
             <InputNumber min={1} max={20} style={{ width: 120 }} />
           </Form.Item>
 
-          <Form.Item label="游客姓名（每行一个）" name="visitorNames">
+          <Form.Item label="游客姓名（每行一个）" name="visitorNames" rules={[{ required: true, message: '请填写游客姓名' }]}>
             <Input.TextArea rows={3} placeholder="请填写全部游客姓名" />
           </Form.Item>
 
-          <Form.Item label="身份证号（每行一个）" name="visitorIds">
+          <Form.Item label="身份证号（每行一个）" name="visitorIds" rules={[{ required: true, message: '请填写身份证号' }]}>
             <Input.TextArea rows={3} placeholder="用于景区实名制入园" />
           </Form.Item>
 

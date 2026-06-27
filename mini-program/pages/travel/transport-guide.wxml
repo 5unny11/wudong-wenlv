@@ -1,0 +1,34 @@
+<view class="container">
+  <view class="header">
+    <view class="back-btn" bindtap="goBack">← 返回</view>
+    <text class="title">{{guide.title}}</text>
+  </view>
+
+  <view class="card">
+    <view class="route-line">
+      <text class="departure">{{guide.departure}}</text>
+      <text class="arrow">→</text>
+      <text class="destination">{{guide.destination}}</text>
+    </view>
+
+    <view class="info-row">
+      <view class="info-item">
+        <text class="label">交通方式</text>
+        <text class="value">{{guide.transport_mode}}</text>
+      </view>
+      <view class="info-item" wx:if="{{guide.duration}}">
+        <text class="label">预计耗时</text>
+        <text class="value">{{guide.duration}}小时</text>
+      </view>
+      <view class="info-item" wx:if="{{guide.cost}}">
+        <text class="label">参考费用</text>
+        <text class="value price">¥{{guide.cost}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="card" wx:if="{{guide.detail}}">
+    <text class="section-title">详细攻略</text>
+    <text class="detail-text">{{guide.detail}}</text>
+  </view>
+</view>

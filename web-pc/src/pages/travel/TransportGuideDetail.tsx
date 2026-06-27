@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Card, Typography, Button, Spin, Descriptions, Tag, Row, Col, Divider } from 'antd';
 import { ArrowLeftOutlined, EnvironmentOutlined, CarOutlined } from '@ant-design/icons';
 import { travelAPI } from '@/api';
+import { transportCovers, defaultCover } from './covers';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -32,6 +33,8 @@ export default function TransportGuideDetailPage() {
   if (loading) return <div style={{ textAlign: 'center', padding: 80 }}><Spin size="large" /></div>;
   if (!guide) return <div style={{ textAlign: 'center', padding: 80 }}><Text>攻略不存在</Text></div>;
 
+  const cov = transportCovers[guide.id] || defaultCover;
+
   return (
     <div style={{ maxWidth: 800, margin: '0 auto', padding: 24 }}>
       <Button type="link" icon={<ArrowLeftOutlined />} onClick={() => navigate('/travel')} style={{ marginBottom: 16, padding: 0 }}>
@@ -39,11 +42,11 @@ export default function TransportGuideDetailPage() {
       </Button>
 
       <div style={{
-        height: 200, borderRadius: 8, marginBottom: 24,
-        background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 64,
+        height: 200, borderRadius: 12, marginBottom: 24,
+        background: cov.gradient,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
-        🚌
+        <span style={{ fontSize: 80, opacity: 0.35 }}>{cov.icon}</span>
       </div>
 
       <Title level={3}>{guide.title}</Title>

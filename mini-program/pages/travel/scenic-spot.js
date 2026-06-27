@@ -5,7 +5,7 @@ Page({
     const token = wx.getStorageSync("token");
     this.setData({ token });
     wx.request({
-      url: "http://localhost:7001/api/scenic-spots/" + id,
+      url: "http://127.0.0.1:7001/api/scenic-spots/" + id,
       success: r => {
         if (r.data.code === 0) {
           const spot = r.data.data;
@@ -47,7 +47,7 @@ Page({
       success: res => {
         if (!res.confirm) return;
         wx.request({
-          url: "http://localhost:7001/api/travel/orders",
+          url: "http://127.0.0.1:7001/api/travel/orders",
           method: "POST",
           header: { "Content-Type": "application/json", Authorization: "Bearer " + token },
           data: {

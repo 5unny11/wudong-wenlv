@@ -1,22 +1,22 @@
-﻿<view class="container">
+<view class="container">
   <view class="back" bindtap="goBack">← 返回</view>
-  
+
   <view class="banner route-banner">{{route.title}}</view>
 
   <view class="info-card">
     <view class="info-row">
       <text class="label">类型</text>
-      <text>{{route.duration === "one_day" ? "一日游" : route.duration === "two_day" ? "两日游" : "多日游"}}</text>
+      <text>{{route.duration === 'one_day' ? '一日游' : route.duration === 'two_day' ? '两日游' : '多日游'}}</text>
     </view>
     <view class="info-row"><text class="label">价格</text><text class="price">¥{{route.price}}/人</text></view>
-    <view class="info-row"><text class="label">出发地</text><text>{{route.start_city || "乌东村"}}</text></view>
+    <view class="info-row"><text class="label">出发地</text><text>{{route.start_city || '乌东村'}}</text></view>
   </view>
 
   <view class="section"><text class="section-title">包含项目</text></view>
-  <text class="intro-text">{{route.includes || "详见行程"}}</text>
+  <text class="intro-text">{{route.includes || '详见行程'}}</text>
 
   <view class="section"><text class="section-title">行程安排</text></view>
-  <text class="intro-text">{{route.schedule || route.detail || "暂无详细行程"}}</text>
+  <text class="intro-text">{{route.schedule || route.detail || '暂无详细行程'}}</text>
 
   <view wx:if="{{route.notice}}" class="notice-card">⚠️ {{route.notice}}</view>
 

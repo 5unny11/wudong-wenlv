@@ -162,6 +162,18 @@ export class TravelController {
     }
   }
 
+  @Post('/travel/orders/:id/pay')
+  async payOrder(@Param('id') id: number) {
+    try {
+      const user = this.ctx.state.user;
+      if (!user) return { code: 401, message: '请先登录' };
+      const data = await this.travelService.payOrder(id, user.userId);
+      return { code: 0, message: '支付成功（模拟）', data };
+    } catch (err: any) {
+      return { code: 1, message: err.message };
+    }
+  }
+
   // ==================== 电子票 ====================
 
   @Get('/e-tickets')
@@ -183,16 +195,6 @@ export class TravelController {
       if (!user) return { code: 401, message: '请先登录' };
       const data = await this.travelService.getETicket(id, user.userId);
       return { code: 0, message: 'success', data };
-    } catch (err: any) {
-      return { code: 1, message: err.message };
-    }
-  }
-
-  @Post('/e-tickets/verify')
-  async verifyETicket(@Body() body: { qrCode: string }) {
-    try {
-      const data = await this.travelService.verifyETicket(body.qrCode, 1);
-      return { code: 0, message: '核销成功', data };
     } catch (err: any) {
       return { code: 1, message: err.message };
     }
