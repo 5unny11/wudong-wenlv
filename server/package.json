@@ -1,0 +1,43 @@
+{
+   "name": "wudong-wenlv-server",
+   "version": "1.0.0",
+   "private": true,
+   "scripts": {
+      "dev": "cross-env NODE_ENV=local midway-bin dev --ts",
+      "build": "midway-bin build",
+      "start": "cross-env NODE_ENV=production midway-bin start",
+      "test": "jest --passWithNoTests"
+   },
+   "dependencies": {
+      "@midwayjs/core": "^3.17.0",
+      "@midwayjs/info": "^3.17.0",
+      "@midwayjs/jwt": "^3.17.0",
+      "@midwayjs/koa": "^3.17.0",
+      "@midwayjs/logger": "^3.4.2",
+      "@midwayjs/swagger": "^3.17.0",
+      "@midwayjs/typeorm": "^3.17.0",
+      "@midwayjs/validate": "^3.17.0",
+      "axios": "^1.7.0",
+      "bcryptjs": "^2.4.0",
+      "class-transformer": "^0.5.0",
+      "class-validator": "^0.14.0",
+      "jsonwebtoken": "^9.0.0",
+      "koa": "^2.15.0",
+      "koa-body": "^6.0.0",
+      "mysql2": "^3.11.0",
+      "typeorm": "^0.3.20",
+      "uuid": "^9.0.0"
+   },
+   "devDependencies": {
+      "@midwayjs/cli": "^2.0.0",
+      "@midwayjs/mock": "^3.17.0",
+      "@types/bcryptjs": "^2.4.0",
+      "@types/jsonwebtoken": "^9.0.0",
+      "@types/node": "^20.0.0",
+      "cross-env": "^7.0.0",
+      "jest": "^29.7.0",
+      "midway-bin": "^2.0.0",
+      "ts-jest": "^29.1.0",
+      "typescript": "^5.4.0"
+   }
+}

@@ -1,0 +1,16 @@
+{
+  "pages": [
+    "pages/travel/travel",
+    "pages/travel/scenic-spot",
+    "pages/travel/route",
+    "pages/travel/e-ticket",
+    "pages/travel/orders",
+    "pages/user/login",
+    "pages/user/register"
+  ],
+  "window": {
+    "navigationBarTitleText": "乌东文旅",
+    "navigationBarBackgroundColor": "#1677ff",
+    "navigationBarTextStyle": "white"
+  }
+}

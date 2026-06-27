@@ -1,0 +1,14 @@
+<view class="container">
+  <view class="card">
+    <text class="title">登录</text>
+    <text class="subtitle">乌东文旅平台</text>
+
+    <view class="form">
+      <input class="input" placeholder="手机号" value="{{phone}}" bindinput="e => setData({phone: e.detail.value})" type="number" maxlength="11" />
+      <input class="input" placeholder="密码" value="{{password}}" bindinput="e => setData({password: e.detail.value})" type="password" />
+
+      <button class="login-btn" bindtap="handleLogin">登录</button>
+      <button class="register-link" bindtap="goRegister">没有账号？去注册</button>
+    </view>
+  </view>
+</view>

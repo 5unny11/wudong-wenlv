@@ -1,0 +1,22 @@
+.container { padding: 16px; min-height: 100vh; background: #f5f5f5; }
+.back { font-size: 14px; color: #1677ff; margin-bottom: 12px; }
+.title { font-size: 20px; font-weight: 700; display: block; margin-bottom: 16px; }
+.loading { text-align: center; padding: 40px; color: #999; }
+.empty { text-align: center; padding: 80px 20px; color: #999; font-size: 14px; }
+.list { display: flex; flex-direction: column; gap: 10px; }
+.card { background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+.card-body { padding: 14px; }
+.order-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.order-no { font-size: 13px; color: #666; }
+.order-type { font-size: 11px; padding: 2px 8px; border-radius: 4px; }
+.tag-blue { background: #e6f4ff; color: #1677ff; }
+.tag-green { background: #f6ffed; color: #52c41a; }
+.order-amount { font-size: 20px; font-weight: 700; color: #ff4d4f; }
+.order-status { font-size: 12px; padding: 2px 8px; border-radius: 4px; }
+.status-0 { background: #fff7e6; color: #fa8c16; }
+.status-1 { background: #e6f4ff; color: #1677ff; }
+.status-3 { background: #f6ffed; color: #52c41a; }
+.status-4 { background: #f0f0f0; color: #999; }
+.order-time { font-size: 12px; color: #999; }
+.order-actions { margin-top: 10px; text-align: right; }
+.cancel-btn { display: inline-block; font-size: 13px; padding: 6px 16px; border: 1px solid #d9d9d9; border-radius: 4px; color: #999; background: #fff; }

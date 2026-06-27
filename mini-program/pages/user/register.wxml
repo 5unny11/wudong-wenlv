@@ -1,0 +1,15 @@
+<view class="container">
+  <view class="card">
+    <text class="title">注册</text>
+    <text class="subtitle">创建乌东文旅账号</text>
+
+    <view class="form">
+      <input class="input" placeholder="手机号" value="{{phone}}" bindinput="e => setData({phone: e.detail.value})" type="number" maxlength="11" />
+      <input class="input" placeholder="密码" value="{{password}}" bindinput="e => setData({password: e.detail.value})" type="password" />
+      <input class="input" placeholder="确认密码" value="{{confirmPassword}}" bindinput="e => setData({confirmPassword: e.detail.value})" type="password" />
+
+      <button class="login-btn" bindtap="handleRegister">注册</button>
+      <button class="register-link" bindtap="goBack" catchtap="wx.navigateBack">已有账号？去登录</button>
+    </view>
+  </view>
+</view>
